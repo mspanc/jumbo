@@ -34,7 +34,7 @@ defmodule Jumbo.QueueSupervisor do
   def init(queues) do
     children = queues |>
       Enum.map(fn({queue_name, queue_options}) ->
-        worker(Jumbo.Queue, [queue_options], [name: queue_name, id: queue_name])
+        worker(Jumbo.Queue, [queue_options, [name: queue_name]], [id: queue_name])
       end)
 
     supervise(children, strategy: :one_for_one)

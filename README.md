@@ -94,7 +94,35 @@ defmodule SampleApp do
 end
 ```
 
-then in your code you can define a job module:
+however, better idea may be to add a supervisor, instead of directly linking
+queue processes to your application:
+
+```elixir
+defmodule SampleApp do
+  use Application
+
+  def start(_type, _args) do
+    import Supervisor.Spec, warn: false
+
+    children = [
+      supervisor(Jumbo.QueueSupervisor, [[
+        {
+          SampleApp.Queue.Heavy,
+          %Jumbo.QueueOptions{concurrency: 8, logger_tag: "heavy"},
+        }, {
+          SampleApp.Queue.Light,
+          %Jumbo.QueueOptions{concurrency: 16, logger_tag: "light"},
+        }
+      ], [name: SampleApp.QueueSupervisor]]),
+    ]
+
+    opts = [strategy: :one_for_one, name: SampleApp]
+    Supervisor.start_link(children, opts)
+  end
+end
+```
+
+Then in your code you can define a job module:
 
 ```elixir
 defmodule SampleApp.SampleSleepJob do
