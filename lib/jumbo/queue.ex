@@ -1,7 +1,14 @@
 defmodule Jumbo.Queue do
   @moduledoc """
   Module that holds logic of single job processing queue.
+
+  It is supposed to be spawned as a process using `start_link/2` or `start/2`
+  functions.
+
+  See `Jumbo.QueueOptions` for description of options that can be passed to such
+  calls in order to customize queue's behaviour.
   """
+
 
   use GenServer
   alias Jumbo.QueueState
