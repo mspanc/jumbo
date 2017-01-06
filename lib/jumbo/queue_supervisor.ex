@@ -22,9 +22,9 @@ defmodule Jumbo.QueueSupervisor do
 
   Returns the same values as `Supervisor.start_link/2`.
   """
-  @spec start_link([] | [{atom, module, Jumbo.QueueOptions.t}]) :: Supervisor.on_start
-  def start_link(queues) do
-    Supervisor.start_link(__MODULE__, queues)
+  @spec start_link([] | [{atom, module, Jumbo.QueueOptions.t}], Supervisor.options) :: Supervisor.on_start
+  def start_link(queues, process_options \\ []) do
+    Supervisor.start_link(__MODULE__, queues, process_options)
   end
 
 
@@ -34,7 +34,7 @@ defmodule Jumbo.QueueSupervisor do
   def init(queues) do
     children = queues |>
       Enum.map(fn({queue_name, queue_options}) ->
-        worker(Jumbo.Queue, [queue_options], name: queue_name, id: queue_name)
+        worker(Jumbo.Queue, [queue_options], [name: queue_name, id: queue_name])
       end)
 
     supervise(children, strategy: :one_for_one)
