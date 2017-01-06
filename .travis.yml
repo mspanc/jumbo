@@ -1,0 +1,15 @@
+language: elixir
+elixir:
+  - 1.4.4
+otp_release:
+  - 18.3
+  - 19.2
+sudo: false
+
+env:
+  - MIX_ENV=test
+
+script: mix coveralls.travis
+notifications:
+  recipients:
+    - marcin@saepia.net
