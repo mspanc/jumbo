@@ -106,7 +106,7 @@ end
 
 and enqueue it:
 
-```
+```elixir
 Joint.Queue.enqueue(SampleApp.QueueLight, ["hello"])
 ```
 
