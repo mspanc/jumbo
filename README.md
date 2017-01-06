@@ -1,5 +1,10 @@
 # Jumbo - A surprisingly thin job queue for Elixir
 
+[![Build Status](https://travis-ci.org/mspanc/jumbo.svg?branch=master)](https://travis-ci.org/mspanc/jumbo)
+[![Coverage Status](https://coveralls.io/repos/github/mspanc/jumbo/badge.svg?branch=master)](https://coveralls.io/github/mspanc/jumbo?branch=master)
+[![Hex.pm](https://img.shields.io/hexpm/v/jumbo.svg)](https://hex.pm/packages/jumbo)
+[![Hex.pm](https://img.shields.io/hexpm/dt/jumbo.svg)](https://hex.pm/packages/jumbo)
+
 Jumbo is a job queue for the [Elixir](http://www.elixir-lang.org) language.
 
 At the moment it does not support persistency but it may be added in the future.
