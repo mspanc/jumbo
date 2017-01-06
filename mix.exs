@@ -11,7 +11,8 @@ defmodule Jumbo.Mixfile do
      licenses: ["LGPL"],
      name: "Jumbo Core",
      source_url: "https://github.com/mspanc/jumbo",
-     preferred_cli_env: [espec: :test],
+     preferred_cli_env: [espec: :test, "coveralls": :test, "coveralls.detail": :test, "coveralls.post": :test, "coveralls.html": :test],
+     test_coverage: [tool: ExCoveralls, test_task: "espec"],
      deps: deps]
   end
 
@@ -32,6 +33,7 @@ defmodule Jumbo.Mixfile do
       {:espec, "~> 1.1.2", only: :test},
       {:ex_doc, "~> 0.14", only: :dev},
       {:uuid, "~> 1.1"},
+      {:excoveralls, "~> 0.6", only: :test},
     ]
   end
 end
