@@ -78,13 +78,14 @@ defmodule SampleApp do
       # Queue for heavy tasks
       worker(Jumbo.Queue, [
         %Jumbo.QueueOptions{},
-        [name: SampleApp.QueueHeavy]]
-      ),
+        [name: SampleApp.QueueHeavy]
+      ], [id: :heavy]),
+
       # Queue for light tasks
       worker(Jumbo.Queue, [
         %Jumbo.QueueOptions{},
-        [name: SampleApp.QueueLight]]
-      ),
+        [name: SampleApp.QueueLight]
+      ], [id: :light]),
     ]
 
     opts = [strategy: :one_for_one, name: SampleApp]
