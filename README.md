@@ -76,12 +76,12 @@ defmodule SampleApp do
 
     children = [
       # Queue for heavy tasks
-      worker(Joint.Queue, [
+      worker(Jumbo.Queue, [
         %Jumbo.QueueOptions{},
         [name: SampleApp.QueueHeavy]]
       ),
       # Queue for light tasks
-      worker(Joint.Queue, [
+      worker(Jumbo.Queue, [
         %Jumbo.QueueOptions{},
         [name: SampleApp.QueueLight]]
       ),
@@ -107,7 +107,7 @@ end
 and enqueue it:
 
 ```elixir
-Joint.Queue.enqueue(SampleApp.QueueLight, ["hello"])
+Jumbo.Queue.enqueue(SampleApp.QueueLight, ["hello"])
 ```
 
 
