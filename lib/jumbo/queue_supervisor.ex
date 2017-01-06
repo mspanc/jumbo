@@ -4,6 +4,33 @@ defmodule Jumbo.QueueSupervisor do
 
   It is supposed to be spawned as a process using `start_link/2` or `start/2`
   functions.
+
+  ## Usage with OTP application
+
+  If you want to add it to your OTP app, you may do this as following:
+
+      defmodule SampleApp do
+        use Application
+
+        def start(_type, _args) do
+          import Supervisor.Spec, warn: false
+
+          children = [
+            supervisor(Jumbo.QueueSupervisor, [[
+              {
+                SampleApp.Queue.Heavy,
+                %Jumbo.QueueOptions{concurrency: 8, logger_tag: "heavy"},
+              }, {
+                SampleApp.Queue.Light,
+                %Jumbo.QueueOptions{concurrency: 16, logger_tag: "light"},
+              }
+            ], [name: SampleApp.QueueSupervisor]]),
+          ]
+
+          opts = [strategy: :one_for_one, name: SampleApp]
+          Supervisor.start_link(children, opts)
+        end
+      end
   """
 
   use Supervisor

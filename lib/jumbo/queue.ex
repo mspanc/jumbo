@@ -7,6 +7,37 @@ defmodule Jumbo.Queue do
 
   See `Jumbo.QueueOptions` for description of options that can be passed to such
   calls in order to customize queue's behaviour.
+
+  ## Usage with OTP application
+
+  If you want to add it to your OTP app, you may do this as following:
+
+      defmodule SampleApp do
+        use Application
+
+        def start(_type, _args) do
+          import Supervisor.Spec, warn: false
+
+          children = [
+            # Queue for heavy tasks
+            worker(Jumbo.Queue, [
+              %Jumbo.QueueOptions{},
+              [name: SampleApp.QueueHeavy]
+            ], [id: :heavy]),
+
+            # Queue for light tasks
+            worker(Jumbo.Queue, [
+              %Jumbo.QueueOptions{},
+              [name: SampleApp.QueueLight]
+            ], [id: :light]),
+          ]
+
+          opts = [strategy: :one_for_one, name: SampleApp]
+          Supervisor.start_link(children, opts)
+        end
+      end
+
+  However, please note that using `Jumbo.QueueSupervisor` may be a better idea.
   """
 
 
