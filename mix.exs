@@ -6,10 +6,9 @@ defmodule Jumbo.Mixfile do
      version: "1.0.0",
      elixir: "~> 1.3",
      elixirc_paths: elixirc_paths(Mix.env),
+     name: "Jumbo",
      description: "Jumbo Job Queue",
-     maintainers: ["Marcin Lewandowski"],
-     licenses: ["LGPL"],
-     name: "Jumbo Core",
+     package: package,
      source_url: "https://github.com/mspanc/jumbo",
      preferred_cli_env: [espec: :test, "coveralls": :test, "coveralls.detail": :test, "coveralls.post": :test, "coveralls.html": :test],
      test_coverage: [tool: ExCoveralls, test_task: "espec"],
@@ -34,6 +33,16 @@ defmodule Jumbo.Mixfile do
       {:ex_doc, "~> 0.14", only: :dev},
       {:uuid, "~> 1.1"},
       {:excoveralls, "~> 0.6", only: :test},
+    ]
+  end
+
+
+  defp package do
+    [
+      files: ["lib", "mix.exs", "README*"],
+      maintainers: ["Marcin Lewandowski"],
+      licenses: ["MIT"],
+      links: %{"GitHub" => "https://github.com/mspanc/jumbo"}
     ]
   end
 end
