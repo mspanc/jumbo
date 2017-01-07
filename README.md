@@ -73,7 +73,13 @@ Just useful.
 
 ### API changes
 
-* Jumbo.Queue.enqueue/3 should return `{:ok, job_id}` instead of `:ok`
+There are some upcoming breaking API changes.
+
+* `Jumbo.Queue.enqueue/3` should return `{:ok, job_id}` instead of `:ok`,
+* `Jumbo.Queue.enqueue/3` should accept MFA [as suggested on ElixirForum](https://elixirforum.com/t/jumbo-new-job-queueing-library/3170/4?u=mspanc),
+* `Jumbo.Queue.get_*_jobs/2` should allow to fetch paginated jobs for showing them efficiently in the upcoming Web UI.
+
+Please create an Issue if you have any further suggestions.
 
 ### Statistics
 
@@ -117,13 +123,13 @@ defmodule SampleApp do
       # Queue for heavy tasks
       worker(Jumbo.Queue, [
         %Jumbo.QueueOptions{},
-        [name: SampleApp.QueueHeavy]
+        [name: SampleApp.Queue.Heavy]
       ], [id: :heavy]),
 
       # Queue for light tasks
       worker(Jumbo.Queue, [
         %Jumbo.QueueOptions{},
-        [name: SampleApp.QueueLight]
+        [name: SampleApp.Queue.Light]
       ], [id: :light]),
     ]
 
@@ -161,6 +167,9 @@ defmodule SampleApp do
 end
 ```
 
+Names in the code snippeds above are just regular Erlang registered process names.
+Any value recognized by Erlang as a valid registered process name will work.
+
 Then in your code you can define a job module:
 
 ```elixir
@@ -175,7 +184,7 @@ end
 and enqueue it:
 
 ```elixir
-Jumbo.Queue.enqueue(SampleApp.QueueLight, SampleApp.SampleSleepJob, ["hello"])
+Jumbo.Queue.enqueue(SampleApp.Queue.Light, SampleApp.SampleSleepJob, ["hello"])
 ```
 
 
