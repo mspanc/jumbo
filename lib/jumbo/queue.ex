@@ -59,12 +59,12 @@ defmodule Jumbo.Queue do
 
 
   @doc """
-  Starts job queue process and links it into current process.
+  Starts a job queue process and links it into current process.
 
-  It accepts concurrency argument, which means how many tasks in this queue
-  can be executed in parallel.
+  It accepts queue_options argument, which should contain `Jumbo.QueueOptions`
+  struct.
 
-  It also accepts options argument, sililar to GenServer's options.
+  It also accepts process_options argument, that works like GenServer's options.
 
   It returns the same return values as `GenServer.start_link/3`.
   """
@@ -75,7 +75,7 @@ defmodule Jumbo.Queue do
 
 
   @doc """
-  Similar to `start_link/2` but starts queue outside of the supervision tree.
+  Similar to `start_link/2` but starts the queue outside of the supervision tree.
   """
   @spec start(QueueOptions.t, GenServer.options) :: GenServer.on_start
   def start(queue_options \\ %QueueOptions{}, process_options \\ []) do
