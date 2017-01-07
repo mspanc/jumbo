@@ -60,6 +60,17 @@ ETS tables will be used for storing jobs.
 
 Specs are cool thing to have, definitely!
 
+### Web UI
+
+Just useful.
+
+### API changes
+
+* Jumbo.Queue.enqueue/3 should return `{:ok, job_id}` instead of `:ok`
+
+### Statistics
+
+Queue should maintain per-queue statistics.
 
 ## Usage
 
