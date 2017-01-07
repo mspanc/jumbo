@@ -40,6 +40,26 @@ per-queue, yay!
 It should be as light as possible. If you launch millions of jobs, you don't want
 your queue engine to be a bottleneck.
 
+## TODO
+
+Hey this is 1.0.0, don't expect too much, some things may be still improved!
+
+### Memory usage
+
+At the moment jobs are stored just in underlying GenServer's state which may
+result in high memory usage in case of many jobs. Should be improved once
+ETS tables will be used for storing jobs.
+
+### Job polling
+
+At the moment jobs are stored just in underlying GenServer's state which may
+result in bad access times in case of many jobs. Should be improved once
+ETS tables will be used for storing jobs.
+
+### Code coverage
+
+Specs are cool thing to have, definitely!
+
 
 ## Usage
 
