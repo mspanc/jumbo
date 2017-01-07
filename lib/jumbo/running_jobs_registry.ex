@@ -1,6 +1,7 @@
 defmodule Jumbo.RunningJobsRegistry do
   @moduledoc false
 
+  alias Jumbo.JobId
   alias Jumbo.RunningJob
   alias Jumbo.RunningJobsRegistry
 
@@ -20,7 +21,7 @@ defmodule Jumbo.RunningJobsRegistry do
     ids: MapSet.new
 
 
-  @spec put(RunningJobsRegistry.t, Job.id_t, reference, pid, Job.module_t, Job.args_t, non_neg_integer) :: RunningJobsRegistry.t
+  @spec put(RunningJobsRegistry.t, JobId.t, reference, pid, Job.module_t, Job.args_t, non_neg_integer) :: RunningJobsRegistry.t
   def put(%RunningJobsRegistry{jobs: jobs, count: count, ids: ids}, id, ref, pid, module, args, failure_count \\ 0) do
     %RunningJobsRegistry{
       jobs: jobs |> Map.put(ref,

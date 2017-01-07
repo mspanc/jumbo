@@ -1,6 +1,7 @@
 defmodule Jumbo.FailedJobsRegistry do
   @moduledoc false
 
+  alias Jumbo.JobId
   alias Jumbo.FailedJob
   alias Jumbo.FailedJobsRegistry
 
@@ -20,7 +21,7 @@ defmodule Jumbo.FailedJobsRegistry do
     ids: MapSet.new
 
 
-  @spec put(FailedJobsRegistry.t, Job.id_t, Job.module_t, Job.args_t, FailedJob.reason_t, FailedJob.info_t, FailedJob.stacktrace_t) :: FailedJobsRegistry.t
+  @spec put(FailedJobsRegistry.t, JobId.t, Job.module_t, Job.args_t, FailedJob.reason_t, FailedJob.info_t, FailedJob.stacktrace_t) :: FailedJobsRegistry.t
   def put(%FailedJobsRegistry{jobs: jobs, count: count, ids: ids}, id, module, args, reason, info \\ nil, stacktrace \\ nil, failure_count \\ 1) do
     %FailedJobsRegistry{
       jobs: jobs |> MapSet.put(%FailedJob{id: id, module: module, args: args, reason: reason, info: info, stacktrace: stacktrace, failed_at: :erlang.monotonic_time(), failure_count: failure_count}),

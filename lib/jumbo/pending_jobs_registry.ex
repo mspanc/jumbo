@@ -1,6 +1,7 @@
 defmodule Jumbo.PendingJobsRegistry do
   @moduledoc false
 
+  alias Jumbo.JobId
   alias Jumbo.PendingJob
   alias Jumbo.PendingJobsRegistry
 
@@ -20,7 +21,7 @@ defmodule Jumbo.PendingJobsRegistry do
     ids: MapSet.new
 
 
-  @spec put(PendingJobsRegistry.t, Job.id_t, Job.module_t, Job.args_t) :: PendingJobsRegistry.t
+  @spec put(PendingJobsRegistry.t, JobId.t, Job.module_t, Job.args_t) :: PendingJobsRegistry.t
   def put(%PendingJobsRegistry{jobs: jobs, count: count, ids: ids}, id, module, args) do
     %PendingJobsRegistry{
       jobs: jobs |> MapSet.put(%PendingJob{id: id, module: module, args: args, enqueued_at: :erlang.monotonic_time()}),

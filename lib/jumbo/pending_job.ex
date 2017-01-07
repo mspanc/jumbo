@@ -15,11 +15,11 @@ defmodule Jumbo.PendingJob do
   """
 
 
-  alias Jumbo.Job
+  alias Jumbo.JobId
 
 
   @type t :: %Jumbo.PendingJob{
-    id: Job.id_t,
+    id: JobId.t,
     module: module,
     args: [] | [any],
     failure_count: pos_integer,

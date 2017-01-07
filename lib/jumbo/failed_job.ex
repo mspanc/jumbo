@@ -20,14 +20,14 @@ defmodule Jumbo.FailedJob do
     `:erlang.monotonic_time/0`.
   """
 
-  alias Jumbo.Job
+  alias Jumbo.JobId
 
   @type reason_t :: :throw | :raise | :killed
   @type info_t :: any
   @type stacktrace_t :: [{tuple}]
 
   @type t :: %Jumbo.FailedJob{
-    id: Job.id_t,
+    id: JobId.t,
     module: module,
     args: [] | [any],
     failure_count: pos_integer,
