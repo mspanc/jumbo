@@ -346,7 +346,7 @@ defmodule Jumbo.Queue do
 
   # Cleans up given job after it has succeeded. It removes the job from the
   # running queue and checks whether there's no job pending via `do_next_job/1`.
-  def do_cleanup_job(job_ref, %QueueState{running_jobs: running_jobs, logger_tag: logger_tag} = state) do
+  defp do_cleanup_job(job_ref, %QueueState{running_jobs: running_jobs, logger_tag: logger_tag} = state) do
     %RunningJob{id: id, pid: job_pid, module: job_module, args: job_args} =
       running_jobs
       |> RunningJobsRegistry.get_by_ref(job_ref)
@@ -364,7 +364,7 @@ defmodule Jumbo.Queue do
   # removed, otherwise it is put into the failed queue from which it may be
   # retreived later (after waiting for some time) due to a tick or
   # via `do_next_job/1`.
-  def do_fail_job(job_ref, reason, info, stacktrace, %QueueState{running_jobs: running_jobs, failed_jobs: failed_jobs, logger_tag: logger_tag, max_failure_count: max_failure_count} = state) do
+  defp do_fail_job(job_ref, reason, info, stacktrace, %QueueState{running_jobs: running_jobs, failed_jobs: failed_jobs, logger_tag: logger_tag, max_failure_count: max_failure_count} = state) do
     %RunningJob{id: id, pid: job_pid, module: job_module, args: job_args, failure_count: failure_count} =
       running_jobs
       |> RunningJobsRegistry.get_by_ref(job_ref)
