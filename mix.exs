@@ -18,7 +18,7 @@ defmodule Jumbo.Mixfile do
 
   def application do
     [applications: [
-      :logger,
+      :logger, :crypto,
     ], mod: {Jumbo, []}]
   end
 
@@ -31,7 +31,6 @@ defmodule Jumbo.Mixfile do
     [
       {:espec, "~> 1.1.2", only: :test},
       {:ex_doc, "~> 0.14", only: :dev},
-      {:uuid, "~> 1.1"},
       {:excoveralls, "~> 0.6", only: :test},
     ]
   end

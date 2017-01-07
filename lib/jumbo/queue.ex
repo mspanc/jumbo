@@ -44,6 +44,7 @@ defmodule Jumbo.Queue do
   use GenServer
   alias Jumbo.QueueState
   alias Jumbo.QueueOptions
+  alias Jumbo.Job
   alias Jumbo.JobRegistry
   alias Jumbo.RunningJob
   alias Jumbo.RunningJobsRegistry
@@ -258,7 +259,7 @@ defmodule Jumbo.Queue do
   @doc false
   def handle_info({job_ref, :ok}, %QueueState{running_jobs: running_jobs, logger_tag: logger_tag} = state) do
     %RunningJob{id: id, pid: job_pid} = running_jobs |> RunningJobsRegistry.get_by_ref(job_ref)
-    debug(logger_tag, "Job #{id} #{inspect(job_pid)}: OK")
+    debug(logger_tag, "Job #{Job.id_to_string(id)} #{inspect(job_pid)}: OK")
 
     {:noreply, state}
   end
@@ -268,7 +269,7 @@ defmodule Jumbo.Queue do
   @doc false
   def handle_info({:DOWN, job_ref, :process, _job_pid, :normal}, %QueueState{running_jobs: running_jobs, logger_tag: logger_tag} = state) do
     %RunningJob{id: id, pid: job_pid} = running_jobs |> RunningJobsRegistry.get_by_ref(job_ref)
-    info(logger_tag, "Job #{id} #{inspect(job_pid)}: Process stopped gracefully")
+    info(logger_tag, "Job #{Job.id_to_string(id)} #{inspect(job_pid)}: Process stopped gracefully")
 
     {:noreply, do_cleanup_job(job_ref, state)}
   end
@@ -278,7 +279,7 @@ defmodule Jumbo.Queue do
   @doc false
   def handle_info({:DOWN, job_ref, :process, _job_pid, :killed}, %QueueState{running_jobs: running_jobs, logger_tag: logger_tag} = state) do
     %RunningJob{id: id, pid: job_pid} = running_jobs |> RunningJobsRegistry.get_by_ref(job_ref)
-    warn(logger_tag, "Job #{id} #{inspect(job_pid)}: Process has been killed")
+    warn(logger_tag, "Job #{Job.id_to_string(id)} #{inspect(job_pid)}: Process has been killed")
 
     {:noreply, do_fail_job(job_ref, :killed, nil, nil, state)}
   end
@@ -288,7 +289,7 @@ defmodule Jumbo.Queue do
   @doc false
   def handle_info({:DOWN, job_ref, :process, _job_pid, {{:nocatch, caught}, stacktrace}}, %QueueState{running_jobs: running_jobs, logger_tag: logger_tag} = state) do
     %RunningJob{id: id, pid: job_pid} = running_jobs |> RunningJobsRegistry.get_by_ref(job_ref)
-    warn(logger_tag, "Job #{id} #{inspect(job_pid)}: Thrown #{inspect(caught)} (#{inspect(stacktrace)})")
+    warn(logger_tag, "Job #{Job.id_to_string(id)} #{inspect(job_pid)}: Thrown #{inspect(caught)} (#{inspect(stacktrace)})")
 
     {:noreply, do_fail_job(job_ref, :throw, caught, stacktrace, state)}
   end
@@ -298,7 +299,7 @@ defmodule Jumbo.Queue do
   @doc false
   def handle_info({:DOWN, job_ref, :process, _job_pid, {exception, stacktrace}}, %QueueState{running_jobs: running_jobs, logger_tag: logger_tag} = state) do
     %RunningJob{id: id, pid: job_pid} = running_jobs |> RunningJobsRegistry.get_by_ref(job_ref)
-    warn(logger_tag, "Job #{id} #{inspect(job_pid)}: Raised #{inspect(exception)} (#{inspect(stacktrace)})")
+    warn(logger_tag, "Job #{Job.id_to_string(id)} #{inspect(job_pid)}: Raised #{inspect(exception)} (#{inspect(stacktrace)})")
 
     {:noreply, do_fail_job(job_ref, :raise, exception, stacktrace, state)}
   end
@@ -308,37 +309,37 @@ defmodule Jumbo.Queue do
   # if there's a free slot, or move it to the pending queue, from which it may
   # be later retreived via `do_next_job/1`.
   defp do_enqueue_job(%FailedJob{id: job_id, module: job_module, args: job_args, failure_count: failure_count}, %QueueState{logger_tag: logger_tag} = state) do
-    info(logger_tag, "Re-enqueueuing failed job #{job_id}: #{job_module} (#{inspect(job_args)})")
+    info(logger_tag, "Re-enqueueuing failed job #{Job.id_to_string(job_id)}: #{job_module} (#{inspect(job_args)})")
     do_enqueue_job(job_id, job_module, job_args, failure_count, state)
   end
 
   defp do_enqueue_job(%PendingJob{id: job_id, module: job_module, args: job_args, failure_count: failure_count}, %QueueState{logger_tag: logger_tag} = state) do
-    info(logger_tag, "Re-enqueueuing pending job #{job_id}: #{job_module} (#{inspect(job_args)})")
+    info(logger_tag, "Re-enqueueuing pending job #{Job.id_to_string(job_id)}: #{job_module} (#{inspect(job_args)})")
     do_enqueue_job(job_id, job_module, job_args, failure_count, state)
   end
 
   defp do_enqueue_job(job_module, job_args, %QueueState{running_jobs: running_jobs, pending_jobs: pending_jobs, failed_jobs: failed_jobs, logger_tag: logger_tag} = state) do
     job_id = JobRegistry.find_unused_job_id([running_jobs, pending_jobs, failed_jobs])
-    info(logger_tag, "Enqueueuing new job #{job_id}: #{job_module} (#{inspect(job_args)})")
+    info(logger_tag, "Enqueueuing new job #{Job.id_to_string(job_id)}: #{job_module} (#{inspect(job_args)})")
     do_enqueue_job(job_id, job_module, job_args, 0, state)
   end
 
   defp do_enqueue_job(job_id, job_module, job_args, job_failure_count, %QueueState{supervisor: supervisor, concurrency: concurrency, running_jobs: running_jobs, pending_jobs: pending_jobs, logger_tag: logger_tag} = state) do
     cond do
       running_jobs |> RunningJobsRegistry.count < concurrency ->
-        info(logger_tag, "Starting job #{job_id}: #{job_module} (#{inspect(job_args)})")
+        info(logger_tag, "Starting job #{Job.id_to_string(job_id)}: #{job_module} (#{inspect(job_args)})")
 
         %Task{ref: job_ref, pid: job_pid} = Task.Supervisor.async_nolink(supervisor, fn ->
-          Logger.info("[#{job_module} #{inspect(self())}] Job #{job_id}: Start")
+          Logger.info("[#{job_module} #{inspect(self())}] Job #{Job.id_to_string(job_id)}: Start")
           Kernel.apply(job_module, :perform, job_args)
-          Logger.info("[#{job_module} #{inspect(self())}] Job #{job_id}: Stop")
+          Logger.info("[#{job_module} #{inspect(self())}] Job #{Job.id_to_string(job_id)}: Stop")
         end)
 
-        info(logger_tag, "Started job #{job_id}: #{job_module} (#{inspect(job_args)}) as #{inspect(job_pid)}")
+        info(logger_tag, "Started job #{Job.id_to_string(job_id)}: #{job_module} (#{inspect(job_args)}) as #{inspect(job_pid)}")
         %{state | running_jobs: running_jobs |> RunningJobsRegistry.put(job_id, job_ref, job_pid, job_module, job_args, job_failure_count)}
 
       true ->
-        info(logger_tag, "Enqueued job #{job_id}: #{job_module} (#{inspect(job_args)})")
+        info(logger_tag, "Enqueued job #{Job.id_to_string(job_id)}: #{job_module} (#{inspect(job_args)})")
         %{state | pending_jobs: pending_jobs |> PendingJobsRegistry.put(job_id, job_module, job_args)}
     end
   end
@@ -351,7 +352,7 @@ defmodule Jumbo.Queue do
       running_jobs
       |> RunningJobsRegistry.get_by_ref(job_ref)
 
-    info(logger_tag, "Cleaning up job #{id} that was running as #{inspect(job_pid)}: #{job_module} (#{inspect(job_args)})")
+    info(logger_tag, "Cleaning up Job #{Job.id_to_string(id)} that was running as #{inspect(job_pid)}: #{job_module} (#{inspect(job_args)})")
 
     %{state |
       running_jobs: running_jobs |> RunningJobsRegistry.delete_by_ref(job_ref)
@@ -371,7 +372,7 @@ defmodule Jumbo.Queue do
 
     new_failure_count = failure_count + 1
 
-    warn(logger_tag, "Failing job #{id} that was running as #{inspect(job_pid)}, failure #{new_failure_count}/#{max_failure_count}: #{job_module} (#{inspect(job_args)})")
+    warn(logger_tag, "Failing Job #{Job.id_to_string(id)} that was running as #{inspect(job_pid)}, failure #{new_failure_count}/#{max_failure_count}: #{job_module} (#{inspect(job_args)})")
 
     cond do
       new_failure_count < max_failure_count ->
@@ -381,7 +382,7 @@ defmodule Jumbo.Queue do
         } |> do_next_job()
 
       true ->
-        warn(logger_tag, "Removing job #{id} that was running as #{inspect(job_pid)} due to too many failures (#{max_failure_count}): #{job_module} (#{inspect(job_args)})")
+        warn(logger_tag, "Removing Job #{Job.id_to_string(id)} that was running as #{inspect(job_pid)} due to too many failures (#{max_failure_count}): #{job_module} (#{inspect(job_args)})")
         %{state |
           running_jobs: running_jobs |> RunningJobsRegistry.delete_by_ref(job_ref)
         } |> do_next_job()
