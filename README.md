@@ -6,7 +6,7 @@
 [![Hex.pm](https://img.shields.io/hexpm/dt/jumbo.svg)](https://hex.pm/packages/jumbo)
 [![Donate via PayPal](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=5BF9TT5YQNU5J)
 [![Donate via Beerpay](https://beerpay.io/mspanc/jumbo/badge.svg?style=flat)](https://beerpay.io/mspanc/jumbo)
-[![Donate Bitcoins](https://img.shields.io/badge/Donate-Bitcoins-00feff.svg)](http://i.imgur.com/OGwoduW.png)
+[![Donate Bitcoins](https://img.shields.io/badge/Donate-Bitcoins-00feff.svg)](https://i.imgur.com/5VJeR9h.png)
 
 Jumbo is a job queue for the [Elixir](http://www.elixir-lang.org) language.
 
