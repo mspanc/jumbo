@@ -71,13 +71,14 @@ Specs are cool thing to have, definitely!
 
 Just useful.
 
-### API changes
+### API changes/additions
 
 There are some upcoming breaking API changes.
 
 * `Jumbo.Queue.enqueue/3` should return `{:ok, job_id}` instead of `:ok`,
 * `Jumbo.Queue.enqueue/3` should accept MFA [as suggested on ElixirForum](https://elixirforum.com/t/jumbo-new-job-queueing-library/3170/4?u=mspanc),
 * `Jumbo.Queue.get_*_jobs/2` should allow to fetch paginated jobs for showing them efficiently in the upcoming Web UI.
+* New `Jumbo.QueueBehaviour` for defining custom queue modules with callbacks.
 
 Please create an Issue if you have any further suggestions.
 
