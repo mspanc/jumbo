@@ -196,9 +196,11 @@ Project follows [Semantic Versioning](http://semver.org/).
 
 ## Author
 
-
 Marcin Lewandowski <marcin@saepia.net>
 
+## Credits
+
+* Parts of `Jumbo.JobId` handling were taken from the [uuid](https://github.com/zyro/elixir-uuid) project.
 
 ## License
 
