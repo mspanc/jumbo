@@ -28,8 +28,11 @@ list of jobs or do other stuff. In fact, Jumbo is a wrapper around GenServer
 and a Task.
 
 In other projects there are also some DSLs for defining and managing the
-individual queues. Here, each queue is just a process that you can call
-similarly to how you use GenServer.
+individual queues which add unnecessary, non-standard abstraction layer.
+Here, each queue is just a process that you can call similarly to how you use
+GenServer. It perfectly fits into your application and you can use it Erlang way.
+Need to spawn a queue while app is running? No problem, `Jumbo.Queue.start_link/2`
+is waiting for you.
 
 ### Not necessarily persistent
 
