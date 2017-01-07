@@ -14,8 +14,10 @@ At the moment it does not support persistency but it may be added in the future.
 
 ### Reliability
 
-First of all, job processing queue must be reliable even under high workloads.
-Needless to comment.
+First of all, job processing queue must be reliable even under high workloads
+and handle all sorts of reasons for failing jobs. Jumbo will survive throwing
+terms, raising exceptions and even job processes performing seppuku by sending
+`Process.exit(self(), :kill)`!
 
 ### Using OTP goodness as much as it is possible
 
