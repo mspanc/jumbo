@@ -6,6 +6,7 @@
 [![Hex.pm](https://img.shields.io/hexpm/dt/jumbo.svg)](https://hex.pm/packages/jumbo)
 [![Donate via PayPal](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=5BF9TT5YQNU5J)
 [![Donate via Beerpay](https://beerpay.io/mspanc/jumbo/badge.svg?style=flat)](https://beerpay.io/mspanc/jumbo)
+[![Donate Bitcoins](https://img.shields.io/badge/Donate-Bitcoins-00feff.svg)](http://i.imgur.com/OGwoduW.png)
 
 Jumbo is a job queue for the [Elixir](http://www.elixir-lang.org) language.
 
@@ -19,7 +20,7 @@ one of this shiny buttons below:
 
 | Paypal | Bitcoin | Beerpay |
 | :----: | :-----: | :-----: |
-| [![](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=5BF9TT5YQNU5J) | [![](https://i.imgur.com/dFkg3fw.png)](https://i.imgur.com/5VJeR9h.png)<br><br> 1LHsmP3odWxu1bzUfe2ydrewArB72XbN7n | [![Go to Beerpay](https://beerpay.io/mspanc/jumbo/badge.svg)](https://beerpay.io/mspanc/jumbo) |
+| [![](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=5BF9TT5YQNU5J) | [![](https://i.imgur.com/dFkg3fw.png)](https://i.imgur.com/5VJeR9h.png)<br> 1LHsmP3odWxu1bzUfe2ydrewArB72XbN7n | [![Go to Beerpay](https://beerpay.io/mspanc/jumbo/badge.svg)](https://beerpay.io/mspanc/jumbo) |
 
 ## Goals
 
