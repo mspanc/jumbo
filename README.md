@@ -1,4 +1,4 @@
-# Jumbo - A surprisingly thin job queue for Elixir
+# Jumbo - Reliable, OTP-style, lightweight job processing queue for the Elixir language 
 
 [![Build Status](https://travis-ci.org/mspanc/jumbo.svg?branch=master)](https://travis-ci.org/mspanc/jumbo)
 [![Coverage Status](https://coveralls.io/repos/github/mspanc/jumbo/badge.svg?branch=master)](https://coveralls.io/github/mspanc/jumbo?branch=master)
