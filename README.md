@@ -156,7 +156,7 @@ end
 and enqueue it:
 
 ```elixir
-Jumbo.Queue.enqueue(SampleApp.QueueLight, ["hello"])
+Jumbo.Queue.enqueue(SampleApp.QueueLight, SampleApp.SampleSleepJob, ["hello"])
 ```
 
 
