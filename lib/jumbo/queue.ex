@@ -177,15 +177,17 @@ defmodule Jumbo.Queue do
   @spec init(QueueOptions.t) ::
     {:ok, QueueState.t} |
     {:stop, any}
-  def init(%QueueOptions{concurrency: concurrency, poll_interval: poll_interval, logger_tag: logger_tag, max_failure_count: max_failure_count}) do
+  def init(%QueueOptions{concurrency: concurrency, poll_interval: poll_interval, stats_interval: stats_interval, logger_tag: logger_tag, max_failure_count: max_failure_count}) do
     case Task.Supervisor.start_link() do
       {:ok, supervisor} ->
         {:ok, %QueueState{
           concurrency: concurrency,
           poll_interval: poll_interval,
+          stats_interval: stats_interval,
           logger_tag: logger_tag,
           supervisor: supervisor,
-          tick_timer: do_schedule_tick(poll_interval),
+          poll_timer: do_schedule_poll(poll_interval),
+          stats_timer: do_schedule_stats(stats_interval),
           max_failure_count: max_failure_count,
         }}
 
@@ -228,17 +230,17 @@ defmodule Jumbo.Queue do
 
 
 
-  # Callback received when we received a tick.
+  # Callback received when we need to poll.
   # Checks if there are no failed jobs that should be re-enqueued.
   @doc false
-  def handle_info(:jumbo_tick, %QueueState{failed_jobs: failed_jobs, poll_interval: poll_interval, logger_tag: logger_tag} = state) do
-    debug(logger_tag, "Tick")
+  def handle_info(:jumbo_poll, %QueueState{failed_jobs: failed_jobs, poll_interval: poll_interval, logger_tag: logger_tag} = state) do
+    debug(logger_tag, "Poll")
 
     # FIXME pop many if they are present
     case failed_jobs |> FailedJobsRegistry.pop_many() do
       {:ok, {[], _failed_jobs}} ->
         debug(logger_tag, "No failed jobs popped")
-        {:noreply, %{state | tick_timer: do_schedule_tick(poll_interval)}}
+        {:noreply, %{state | poll_timer: do_schedule_poll(poll_interval)}}
 
       {:ok, {failed_jobs, new_failed_jobs}} ->
         debug(logger_tag, "Failed jobs popped: #{inspect(failed_jobs)}")
@@ -248,10 +250,25 @@ defmodule Jumbo.Queue do
             do_enqueue_job(failed_job, %{acc_state | failed_jobs: new_failed_jobs})
           end)
 
-        {:noreply, %{new_state | tick_timer: do_schedule_tick(poll_interval)}}
+        {:noreply, %{new_state | poll_timer: do_schedule_poll(poll_interval)}}
     end
   end
 
+
+  # Callback received when we need to collect statistics.
+  # At the moment just logs statistics
+  @doc false
+  def handle_info(:jumbo_stats, %QueueState{failed_jobs: failed_jobs, running_jobs: running_jobs, pending_jobs: pending_jobs, stats_interval: stats_interval, logger_tag: logger_tag} = state) do
+    debug(logger_tag, "Stats")
+
+    running_jobs_count = running_jobs |> RunningJobsRegistry.count()
+    failed_jobs_count = failed_jobs |> FailedJobsRegistry.count()
+    pending_jobs_count = pending_jobs |> PendingJobsRegistry.count()
+
+    info(logger_tag, "Statistics: running jobs count = #{running_jobs_count}, failed jobs count = #{failed_jobs_count}, pending jobs count = #{pending_jobs_count}")
+
+    {:noreply, %{state | stats_timer: do_schedule_stats(stats_interval)}}
+  end
 
   # Callback received when running job has done its task.
   # We do not do cleanup here as there will be another message such as
@@ -414,8 +431,13 @@ defmodule Jumbo.Queue do
   end
 
 
-  defp do_schedule_tick(poll_interval) do
-    Process.send_after(self(), :jumbo_tick, poll_interval)
+  defp do_schedule_poll(poll_interval) do
+    Process.send_after(self(), :jumbo_poll, poll_interval)
+  end
+
+
+  defp do_schedule_stats(stats_interval) do
+    Process.send_after(self(), :jumbo_stats, stats_interval)
   end
 
 

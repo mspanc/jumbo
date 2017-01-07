@@ -10,6 +10,8 @@ defmodule Jumbo.QueueOptions do
   * poll_interval: positive integer expressing interval in milliseconds,
     how often the queue should check if there are no failed or scheduled jobs
     to enqueue (defaults to 1000),
+  * stats_interval: positive integer expressing interval in milliseconds,
+    how often the queue should collect statistics (defaults to 60000),
   * logger_tag: string that should be appended to all log messages from this
     queue, or `nil`,
   * max_failure_count: non-negative integer telling how many times failed jobs,
@@ -18,14 +20,16 @@ defmodule Jumbo.QueueOptions do
 
   alias Jumbo.QueueOptions
 
-  @type concurrency_t  :: non_neg_integer
-  @type poll_interval  :: pos_integer
-  @type logger_tag_t   :: String.t | nil
+  @type concurrency_t       :: non_neg_integer
+  @type poll_interval_t     :: pos_integer
+  @type stats_interval_t    :: pos_integer
+  @type logger_tag_t        :: String.t | nil
   @type max_failure_count_t :: non_neg_integer
 
   @type t :: %QueueOptions{
     concurrency: concurrency_t,
-    poll_interval: poll_interval,
+    poll_interval: poll_interval_t,
+    stats_interval: stats_interval_t,
     logger_tag: logger_tag_t,
     max_failure_count: max_failure_count_t,
   }
@@ -33,6 +37,7 @@ defmodule Jumbo.QueueOptions do
   defstruct \
     concurrency: 1,
     poll_interval: 1000,
+    stats_interval: 60000,
     logger_tag: nil,
     max_failure_count: 20
 end
