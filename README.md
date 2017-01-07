@@ -67,7 +67,7 @@ Add dependency to your `mix.exs`:
 
 ```elixir
 defp deps do
-  [{:jumbo, "~> 1.0.0"}]
+  [{:jumbo, "~> 1.0"}]
 end
 ```
 
