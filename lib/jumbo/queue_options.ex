@@ -1,6 +1,6 @@
 defmodule Jumbo.QueueOptions do
   @moduledoc """
-  Struct representing options that can be passed to `Jumbo.Queue` upon
+  Structure representing options that can be passed to `Jumbo.Queue` upon
   initialization.
 
   It has the following fields:
