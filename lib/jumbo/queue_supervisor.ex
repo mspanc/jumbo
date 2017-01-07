@@ -45,7 +45,7 @@ defmodule Jumbo.QueueSupervisor do
 
   * name - an atom that will be used used to name individual queue process, must
     be compatible with syntax of erlang registered process names,
-  * options - a `Jumbo.QueueOptions` struct.
+  * process_options - a `Supervisor.options` struct.
 
   Returns the same values as `Supervisor.start_link/2`.
   """
