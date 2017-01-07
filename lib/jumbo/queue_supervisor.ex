@@ -2,8 +2,7 @@ defmodule Jumbo.QueueSupervisor do
   @moduledoc """
   Module that can be used to supervise many queues.
 
-  It is supposed to be spawned as a process using `start_link/2` or `start/2`
-  functions.
+  It is supposed to be spawned as a process using `start_link/2` function.
 
   ## Usage with OTP application
 
