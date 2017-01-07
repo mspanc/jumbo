@@ -17,10 +17,10 @@ Developers are humans, too, we also need to pay bills from time to time. If you
 wish to repay what you have saved thanks to this piece of code, you can click
 one of this shiny buttons below:
 
-| Paypal | Bitcoin | Beerpay |
+| Paypal | Bitcoin | Beerpay  |
 | ------ | ------- | -------- |
-| [![Go to PayPal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=5BF9TT5YQNU5J |  <center> [![](http://i.imgur.com/OGwoduW.png)] 1LHsmP3odWxu1bzUfe2ydrewArB72XbN7n </center> | 
- <center> [![Go to Beerpay](https://beerpay.io/mspanc/jumbo/badge.svg)](https://beerpay.io/mspanc/jumbo)</center> |
+| [![](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=5BF9TT5YQNU5J) | <center> [![](http://i.imgur.com/OGwoduW.png)] 1LHsmP3odWxu1bzUfe2ydrewArB72XbN7n </center> | 
+ <center> [![Go to Beerpay](https://beerpay.io/mspanc/jumbo/badge.svg)](https://beerpay.io/mspanc/jumbo) </center> |
 
 ## Goals
 
