@@ -22,7 +22,7 @@ terms, raising exceptions and even job processes performing seppuku by sending
 ### Using OTP goodness as much as it is possible
 
 Many existing, similar projects tend to reinvent the wheel. OTP and standard
-library already contains most of the tools that is needed to build a reliable
+library already contains most of the tools that are needed to build a reliable
 queue. It is not necessary to use external DB such as Redis to do locking, keep
 list of jobs or do other stuff. In fact, Jumbo is a wrapper around GenServer
 and a Task.
