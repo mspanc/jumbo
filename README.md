@@ -4,11 +4,23 @@
 [![Coverage Status](https://coveralls.io/repos/github/mspanc/jumbo/badge.svg?branch=master)](https://coveralls.io/github/mspanc/jumbo?branch=master)
 [![Hex.pm](https://img.shields.io/hexpm/v/jumbo.svg)](https://hex.pm/packages/jumbo)
 [![Hex.pm](https://img.shields.io/hexpm/dt/jumbo.svg)](https://hex.pm/packages/jumbo)
+[![Donate via PayPal](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=5BF9TT5YQNU5J)
+[![Donate via Beerpay](https://beerpay.io/mspanc/jumbo/badge.svg?style=flat)](https://beerpay.io/mspanc/jumbo)
 
 Jumbo is a job queue for the [Elixir](http://www.elixir-lang.org) language.
 
 At the moment it does not support persistency but it may be added in the future.
 
+## Let me believe that Karma returns!
+
+Developers are humans, too, we also need to pay bills from time to time. If you
+wish to repay what you have saved thanks to this piece of code, you can click
+one of this shiny buttons below:
+
+| Paypal | Bitcoin | Beerpay |
+| ------ | ------- | -------- |
+| [![Go to PayPal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=5BF9TT5YQNU5J |  <center> [![](http://i.imgur.com/OGwoduW.png)] 1LHsmP3odWxu1bzUfe2ydrewArB72XbN7n </center> | 
+ <center> [![Go to Beerpay](https://beerpay.io/mspanc/jumbo/badge.svg)](https://beerpay.io/mspanc/jumbo)</center> |
 
 ## Goals
 
@@ -205,8 +217,3 @@ Marcin Lewandowski <marcin@saepia.net>
 ## License
 
 MIT
-
-## Support on Beerpay
-Hey dude! Help me out for a couple of :beers:!
-
-[![Beerpay](https://beerpay.io/mspanc/jumbo/badge.svg?style=beer-square)](https://beerpay.io/mspanc/jumbo)  [![Beerpay](https://beerpay.io/mspanc/jumbo/make-wish.svg?style=flat-square)](https://beerpay.io/mspanc/jumbo?focus=wish)
