@@ -22,13 +22,13 @@ defmodule Jumbo.Queue do
             # Queue for heavy tasks
             worker(Jumbo.Queue, [
               %Jumbo.QueueOptions{},
-              [name: SampleApp.QueueHeavy]
+              [name: SampleApp.Queue.Heavy]
             ], [id: :heavy]),
 
             # Queue for light tasks
             worker(Jumbo.Queue, [
               %Jumbo.QueueOptions{},
-              [name: SampleApp.QueueLight]
+              [name: SampleApp.Queue.Light]
             ], [id: :light]),
           ]
 
