@@ -1,7 +1,6 @@
 defmodule Jumbo.JobRegistry do
   @moduledoc false
 
-  alias Jumbo.Job
   alias Jumbo.JobId
 
 
