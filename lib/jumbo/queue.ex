@@ -134,7 +134,7 @@ defmodule Jumbo.Queue do
   Retreives list of failed jobs from given queue.
 
   It returns `{:ok, failed_jobs}` where failed_jobs is a list of
-  `Jumbo.RunningJob` structs.
+  `Jumbo.FailedJob` structs.
 
   ## Example
 
@@ -154,7 +154,7 @@ defmodule Jumbo.Queue do
   Retreives list of pending jobs from given queue.
 
   It returns `{:ok, pending_jobs}` where pending_jobs is a list of
-  `Jumbo.RunningJob` structs.
+  `Jumbo.PendingJob` structs.
 
   ## Example
 
