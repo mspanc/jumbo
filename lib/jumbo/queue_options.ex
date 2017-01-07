@@ -14,8 +14,6 @@ defmodule Jumbo.QueueOptions do
     queue, or `nil`,
   * max_failure_count: non-negative integer telling how many times failed jobs,
     will be retried before removing them from the queue (defaults to 20).
-
-  # TODO: add on_start fun
   """
 
   alias Jumbo.QueueOptions
