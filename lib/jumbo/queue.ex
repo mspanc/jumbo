@@ -177,11 +177,13 @@ defmodule Jumbo.Queue do
   @spec init(QueueOptions.t) ::
     {:ok, QueueState.t} |
     {:stop, any}
-  def init(%QueueOptions{concurrency: concurrency, poll_interval: poll_interval, stats_interval: stats_interval, logger_tag: logger_tag, max_failure_count: max_failure_count}) do
+  def init(%QueueOptions{mode: mode, concurrency: concurrency, poll_interval: poll_interval, stats_interval: stats_interval, job_interval: job_interval, logger_tag: logger_tag, max_failure_count: max_failure_count}) do
     case Task.Supervisor.start_link() do
       {:ok, supervisor} ->
         {:ok, %QueueState{
+          mode: mode,
           concurrency: concurrency,
+          job_interval: job_interval,
           poll_interval: poll_interval,
           stats_interval: stats_interval,
           logger_tag: logger_tag,
@@ -341,9 +343,14 @@ defmodule Jumbo.Queue do
     do_enqueue_job(job_id, job_module, job_args, 0, state)
   end
 
-  defp do_enqueue_job(job_id, job_module, job_args, job_failure_count, %QueueState{supervisor: supervisor, concurrency: concurrency, running_jobs: running_jobs, pending_jobs: pending_jobs, logger_tag: logger_tag} = state) do
+  defp do_enqueue_job(job_id, job_module, job_args, job_failure_count, %QueueState{supervisor: supervisor, mode: mode, job_interval: job_interval, concurrency: concurrency, running_jobs: running_jobs, pending_jobs: pending_jobs, logger_tag: logger_tag} = state) do
+    max_jobs = case mode do
+      :concurrency -> concurrency
+      :job_interval -> 1
+    end
+
     cond do
-      running_jobs |> RunningJobsRegistry.count < concurrency ->
+      running_jobs |> RunningJobsRegistry.count < max_jobs ->
         info(logger_tag, "Starting job #{JobId.to_string(job_id)}: #{job_module} (#{inspect(job_args)})")
 
         %Task{ref: job_ref, pid: job_pid} = Task.Supervisor.async_nolink(supervisor, fn ->
@@ -354,9 +361,15 @@ defmodule Jumbo.Queue do
           Kernel.apply(job_module, :perform, job_args)
 
           stopped_at = :erlang.monotonic_time()
-          duration = ((stopped_at - started_at) / :erlang.convert_time_unit(1, :seconds, :native)) |> Float.round(2)
 
-          Logger.info("[#{job_module} #{inspect(self())}] Job #{JobId.to_string(job_id)}: Stop: duration = #{duration} s")
+          duration = ((stopped_at - started_at) |> div(:erlang.convert_time_unit(1, :millisecond, :native)))
+          Logger.info("[#{job_module} #{inspect(self())}] Job #{JobId.to_string(job_id)}: Stop: duration = #{duration} ms")
+
+          if mode == :job_interval and duration < job_interval do
+            missing_interval = job_interval - duration
+            Logger.info("[#{job_module} #{inspect(self())}] Job #{JobId.to_string(job_id)}: Sleeping for #{missing_interval} ms")
+            :timer.sleep(missing_interval)
+          end
         end)
 
         info(logger_tag, "Started job #{JobId.to_string(job_id)}: #{job_module} (#{inspect(job_args)}) as #{inspect(job_pid)}")

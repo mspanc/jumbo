@@ -12,7 +12,9 @@ defmodule Jumbo.QueueState do
 
 
   @type t :: %QueueState{
+    mode: QueueOptions.mode_t,
     concurrency: QueueOptions.concurrency_t,
+    job_interval: QueueOptions.job_interval_t,
     poll_interval: QueueOptions.poll_interval_t,
     stats_interval: QueueOptions.stats_interval_t,
     logger_tag: QueueOptions.logger_tag_t,
@@ -26,7 +28,9 @@ defmodule Jumbo.QueueState do
   }
 
   defstruct \
+    mode: nil,
     concurrency: nil,
+    job_interval: nil,
     poll_interval: nil,
     stats_interval: nil,
     logger_tag: nil,
