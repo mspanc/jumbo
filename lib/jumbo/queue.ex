@@ -362,8 +362,7 @@ defmodule Jumbo.Queue do
 
           stopped_at = :erlang.monotonic_time()
 
-          ms = :erlang.convert_time_unit(1, :millisecond, :native)
-          duration = (stopped_at - started_at) |> div(ms)
+          duration = :erlang.convert_time_unit((stopped_at - started_at), :native, :millisecond)
           Logger.info("[#{job_module} #{inspect(self())}] Job #{JobId.to_string(job_id)}: Stop: duration = #{duration} ms")
 
           if mode == :job_interval and duration < job_interval do
