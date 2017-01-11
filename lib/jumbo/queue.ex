@@ -276,9 +276,9 @@ defmodule Jumbo.Queue do
   # We do not do cleanup here as there will be another message such as
   # `{:DOWN, job_ref, :process, _job_pid, :normal}` sent.
   @doc false
-  def handle_info({job_ref, :ok}, %QueueState{running_jobs: running_jobs, logger_tag: logger_tag} = state) do
+  def handle_info({job_ref, retval}, %QueueState{running_jobs: running_jobs, logger_tag: logger_tag} = state) when is_reference(job_ref) do
     %RunningJob{id: id, pid: job_pid} = running_jobs |> RunningJobsRegistry.get_by_ref(job_ref)
-    debug(logger_tag, "Job #{JobId.to_string(id)} #{inspect(job_pid)}: OK")
+    debug(logger_tag, "Job #{JobId.to_string(id)} #{inspect(job_pid)}: Returned #{inspect(retval)}")
 
     {:noreply, state}
   end
@@ -362,7 +362,8 @@ defmodule Jumbo.Queue do
 
           stopped_at = :erlang.monotonic_time()
 
-          duration = (stopped_at - started_at) |> div(:erlang.convert_time_unit(1, :millisecond, :native))
+          ms = :erlang.convert_time_unit(1, :millisecond, :native)
+          duration = (stopped_at - started_at) |> div(ms)
           Logger.info("[#{job_module} #{inspect(self())}] Job #{JobId.to_string(job_id)}: Stop: duration = #{duration} ms")
 
           if mode == :job_interval and duration < job_interval do
