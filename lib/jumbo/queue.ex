@@ -358,17 +358,19 @@ defmodule Jumbo.Queue do
 
           started_at = :erlang.monotonic_time()
 
-          Kernel.apply(job_module, :perform, job_args)
+          try do
+            Kernel.apply(job_module, :perform, job_args)
+            do_finalize_job(job_module, started_at, job_id, mode, job_interval)
 
-          stopped_at = :erlang.monotonic_time()
+          catch
+            term ->
+              do_finalize_job(job_module, started_at, job_id, mode, job_interval)
+              throw term
 
-          duration = :erlang.convert_time_unit((stopped_at - started_at), :native, :millisecond)
-          Logger.info("[#{job_module} #{inspect(self())}] Job #{JobId.to_string(job_id)}: Stop: duration = #{duration} ms")
-
-          if mode == :job_interval and duration < job_interval do
-            missing_interval = job_interval - duration
-            Logger.info("[#{job_module} #{inspect(self())}] Job #{JobId.to_string(job_id)}: Sleeping for #{missing_interval} ms")
-            :timer.sleep(missing_interval)
+          rescue
+            exception ->
+              do_finalize_job(job_module, started_at, job_id, mode, job_interval)
+              raise exception
           end
         end)
 
@@ -458,6 +460,20 @@ defmodule Jumbo.Queue do
 
   defp do_schedule_stats(stats_interval) do
     Process.send_after(self(), :jumbo_stats, stats_interval)
+  end
+
+
+  defp do_finalize_job(job_module, started_at, job_id, mode, job_interval) do
+    stopped_at = :erlang.monotonic_time()
+
+    duration = :erlang.convert_time_unit((stopped_at - started_at), :native, :millisecond)
+    Logger.info("[#{job_module} #{inspect(self())}] Job #{JobId.to_string(job_id)}: Stop: duration = #{duration} ms")
+
+    if mode == :job_interval and duration < job_interval do
+      missing_interval = job_interval - duration
+      Logger.info("[#{job_module} #{inspect(self())}] Job #{JobId.to_string(job_id)}: Sleeping for #{missing_interval} ms")
+      :timer.sleep(missing_interval)
+    end
   end
 
 
