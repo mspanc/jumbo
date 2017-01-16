@@ -62,7 +62,7 @@ defmodule Jumbo.FailedJobsRegistry do
         # So after 1st failure it will wait 3s, after 2nd failure it will wait
         # 6s, (9s from first in total) etc.
         failed_jobs_ready = Enum.reject(failed_jobs, fn(%FailedJob{failed_at: failed_at, failure_count: failure_count}) ->
-          (:erlang.monotonic_time() - failed_at) |> div(:erlang.convert_time_unit(1, :seconds, :native) * 3) < failure_count
+          (:erlang.monotonic_time() - failed_at) |> div(System.convert_time_unit(1, :seconds, :native) * 3) < failure_count
         end)
 
         case failed_jobs_ready do
@@ -102,7 +102,7 @@ defmodule Jumbo.FailedJobsRegistry do
         # So after 1st failure it will wait 3s, after 2nd failure it will wait
         # 6s, (9s from first in total) etc.
         failed_jobs_ready = Enum.reject(failed_jobs, fn(%FailedJob{failed_at: failed_at, failure_count: failure_count}) ->
-          (:erlang.monotonic_time() - failed_at) |> div(:erlang.convert_time_unit(1, :seconds, :native) * 3) < failure_count
+          (:erlang.monotonic_time() - failed_at) |> div(System.convert_time_unit(1, :seconds, :native) * 3) < failure_count
         end)
 
         case failed_jobs_ready do
