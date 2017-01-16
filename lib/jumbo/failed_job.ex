@@ -17,7 +17,7 @@ defmodule Jumbo.FailedJob do
   * stacktrace: for reason set to `:throw` or `:raise` it will contain a list,
     of tuples with stack trace,
   * failed_at: time when job was moved to failing state, in format returned by
-    `:erlang.monotonic_time/0`.
+    `System.monotonic_time/0`.
   """
 
   alias Jumbo.JobId

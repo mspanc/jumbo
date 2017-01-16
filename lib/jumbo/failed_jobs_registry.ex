@@ -24,7 +24,7 @@ defmodule Jumbo.FailedJobsRegistry do
   @spec put(FailedJobsRegistry.t, JobId.t, Job.module_t, Job.args_t, FailedJob.reason_t, FailedJob.info_t, FailedJob.stacktrace_t) :: FailedJobsRegistry.t
   def put(%FailedJobsRegistry{jobs: jobs, count: count, ids: ids}, id, module, args, reason, info \\ nil, stacktrace \\ nil, failure_count \\ 1) do
     %FailedJobsRegistry{
-      jobs: jobs |> MapSet.put(%FailedJob{id: id, module: module, args: args, reason: reason, info: info, stacktrace: stacktrace, failed_at: :erlang.monotonic_time(), failure_count: failure_count}),
+      jobs: jobs |> MapSet.put(%FailedJob{id: id, module: module, args: args, reason: reason, info: info, stacktrace: stacktrace, failed_at: System.monotonic_time(), failure_count: failure_count}),
       count: count + 1,
       ids: ids |> MapSet.put(id),
     }
@@ -62,7 +62,7 @@ defmodule Jumbo.FailedJobsRegistry do
         # So after 1st failure it will wait 3s, after 2nd failure it will wait
         # 6s, (9s from first in total) etc.
         failed_jobs_ready = Enum.reject(failed_jobs, fn(%FailedJob{failed_at: failed_at, failure_count: failure_count}) ->
-          (:erlang.monotonic_time() - failed_at) |> div(System.convert_time_unit(1, :seconds, :native) * 3) < failure_count
+          (System.monotonic_time() - failed_at) |> div(System.convert_time_unit(1, :seconds, :native) * 3) < failure_count
         end)
 
         case failed_jobs_ready do
@@ -102,7 +102,7 @@ defmodule Jumbo.FailedJobsRegistry do
         # So after 1st failure it will wait 3s, after 2nd failure it will wait
         # 6s, (9s from first in total) etc.
         failed_jobs_ready = Enum.reject(failed_jobs, fn(%FailedJob{failed_at: failed_at, failure_count: failure_count}) ->
-          (:erlang.monotonic_time() - failed_at) |> div(System.convert_time_unit(1, :seconds, :native) * 3) < failure_count
+          (System.monotonic_time() - failed_at) |> div(System.convert_time_unit(1, :seconds, :native) * 3) < failure_count
         end)
 
         case failed_jobs_ready do

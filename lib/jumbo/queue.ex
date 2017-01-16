@@ -356,7 +356,7 @@ defmodule Jumbo.Queue do
         %Task{ref: job_ref, pid: job_pid} = Task.Supervisor.async_nolink(supervisor, fn ->
           Logger.info("[#{job_module} #{inspect(self())}] Job #{JobId.to_string(job_id)}: Start")
 
-          started_at = :erlang.monotonic_time()
+          started_at = System.monotonic_time()
 
           try do
             Kernel.apply(job_module, :perform, job_args)
@@ -464,7 +464,7 @@ defmodule Jumbo.Queue do
 
 
   defp do_finalize_job(job_module, started_at, job_id, mode, job_interval) do
-    stopped_at = :erlang.monotonic_time()
+    stopped_at = System.monotonic_time()
 
     duration = System.convert_time_unit((stopped_at - started_at), :native, :millisecond)
     Logger.info("[#{job_module} #{inspect(self())}] Job #{JobId.to_string(job_id)}: Stop: duration = #{duration} ms")

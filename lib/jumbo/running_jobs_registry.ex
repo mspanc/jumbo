@@ -30,7 +30,7 @@ defmodule Jumbo.RunningJobsRegistry do
           pid: pid,
           module: module,
           args: args,
-          started_at: :erlang.monotonic_time(),
+          started_at: System.monotonic_time(),
           failure_count: failure_count,
         }
       ),

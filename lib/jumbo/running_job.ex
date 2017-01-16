@@ -10,7 +10,7 @@ defmodule Jumbo.RunningJob do
   * args: list of arguments that are applied to module's perform function when
     running the job,
   * started_at: time when job was started, in format returned by
-    `:erlang.monotonic_time/0`,
+    `System.monotonic_time/0`,
   * failure_count: integer telling how many times this job has failed.
   """
 

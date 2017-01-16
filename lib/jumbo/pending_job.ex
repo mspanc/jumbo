@@ -11,7 +11,7 @@ defmodule Jumbo.PendingJob do
   * failure_count: non-ngative integer telling how many times this job has
     failed in the past,
   * enqueued_at: time when job was moved to the pending queue, in format
-    returned by `:erlang.monotonic_time/0`.
+    returned by `System.monotonic_time/0`.
   """
 
 
