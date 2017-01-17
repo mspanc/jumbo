@@ -107,6 +107,10 @@ defmodule Jumbo.Queue do
   """
   @spec enqueue(pid, QueueState.job_module_t, QueueState.job_args_t, GenServer.timeout) :: :ok
   def enqueue(server, job_module, job_args \\ [], timeout \\ 5000) do
+    if !is_module(job_module), do: throw :badarg
+    if !is_list(job_args),     do: throw :badarg
+    if !is_integer(timeout),   do: throw :badarg
+
     GenServer.call(server, {:jumbo_enqueue, {job_module, job_args}}, timeout)
   end
 
@@ -127,6 +131,8 @@ defmodule Jumbo.Queue do
   """
   @spec get_running_jobs(pid, GenServer.timeout) :: {:ok, [] | [RunningJob.t]}
   def get_running_jobs(server, timeout \\ 5000) do
+    if !is_integer(timeout),   do: throw :badarg
+
     GenServer.call(server, :jumbo_get_running_jobs, timeout)
   end
 
@@ -147,6 +153,8 @@ defmodule Jumbo.Queue do
   """
   @spec get_failed_jobs(pid, GenServer.timeout) :: {:ok, [] | [RunningJob.t]}
   def get_failed_jobs(server, timeout \\ 5000) do
+    if !is_integer(timeout),   do: throw :badarg
+
     GenServer.call(server, :jumbo_get_failed_jobs, timeout)
   end
 
@@ -167,6 +175,8 @@ defmodule Jumbo.Queue do
   """
   @spec get_pending_jobs(pid, GenServer.timeout) :: {:ok, [] | [RunningJob.t]}
   def get_pending_jobs(server, timeout \\ 5000) do
+    if !is_integer(timeout),   do: throw :badarg
+
     GenServer.call(server, :jumbo_get_pending_jobs, timeout)
   end
 
