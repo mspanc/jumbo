@@ -107,7 +107,7 @@ defmodule Jumbo.Queue do
   """
   @spec enqueue(pid, QueueState.job_module_t, QueueState.job_args_t, GenServer.timeout) :: :ok
   def enqueue(server, job_module, job_args \\ [], timeout \\ 5000) do
-    if !is_module(job_module), do: throw :badarg
+    if !is_atom(job_module), do: throw :badarg
     if !is_list(job_args),     do: throw :badarg
     if !is_integer(timeout),   do: throw :badarg
 
