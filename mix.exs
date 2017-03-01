@@ -8,11 +8,11 @@ defmodule Jumbo.Mixfile do
      elixirc_paths: elixirc_paths(Mix.env),
      name: "Jumbo",
      description: "Reliable, OTP-style, lightweight job processing queue",
-     package: package,
+     package: package(),
      source_url: "https://github.com/mspanc/jumbo",
      preferred_cli_env: [espec: :test, "coveralls": :test, "coveralls.detail": :test, "coveralls.post": :test, "coveralls.html": :test],
      test_coverage: [tool: ExCoveralls, test_task: "espec"],
-     deps: deps]
+     deps: deps()]
   end
 
 
