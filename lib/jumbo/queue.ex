@@ -497,13 +497,13 @@ defmodule Jumbo.Queue do
 
 
   defp debug(nil, msg) do
-    if not is_nil(System.get_env("JUMBO_DEBUG") do
+    if not is_nil(System.get_env("JUMBO_DEBUG")) do
       Logger.debug("[#{__MODULE__} #{inspect(self())}] #{msg}")
     end
   end
 
   defp debug(logger_tag, msg) do
-    if not is_nil(System.get_env("JUMBO_DEBUG") do
+    if not is_nil(System.get_env("JUMBO_DEBUG")) do
       Logger.debug("[#{__MODULE__} #{inspect(self())} #{logger_tag}] #{msg}")
     end
   end
